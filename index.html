@@ -22,10 +22,17 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+        /* Responsive grid for input fields */
         .input-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
+            /* auto-fit: Fills the row with as many columns as can fit.
+              minmax(140px, 1fr): Each column will be at least 140px wide, 
+                                   and will expand to share available space (1fr).
+                                   Increased min width to 140px to better encourage 
+                                   single-column layout on narrow mobile screens.
+            */
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem; /* Consistent gap between grid items */
         }
         .input-group {
             display: flex;
@@ -42,8 +49,8 @@
             color: #f1f5f9; /* slate-100 */
             font-size: 0.875rem; /* text-sm */
             border-radius: 0.5rem; /* rounded-lg */
-            padding: 0.75rem; /* p-3 */
-            width: 100%;
+            padding: 0.75rem; /* p-3, good for touch targets */
+            width: 100%; /* Inputs take full width of their grid cell */
         }
         .input-group input:focus {
             outline: 2px solid transparent;
@@ -142,7 +149,6 @@
                 </div>
             </div>
         </div>
-
 
         <button id="generateBtn" class="custom-btn w-full bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-700 font-medium rounded-lg text-sm px-5 py-3 text-center mb-6">
             Generate Text
@@ -285,7 +291,7 @@ Sales $${sales}`;
         // Add this script to register the service worker
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            // Changed path from '/sw.js' to './sw.js' for relative pathing
+            // Ensure sw.js is in the same directory as index.html for this path to work
             navigator.serviceWorker.register('./sw.js') 
               .then(registration => {
                 console.log('ServiceWorker registration successful with scope: ', registration.scope);
@@ -296,4 +302,5 @@ Sales $${sales}`;
           });
         }
     </script>
-
+</body>
+</html>
