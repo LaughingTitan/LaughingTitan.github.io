@@ -1,40 +1,43 @@
-const CACHE_NAME = 'nightly-numbers-cache-v1';
+const CACHE_NAME = 'nightly-numbers-cache-v1'; // Increment version if you make changes to cached files
 const urlsToCache = [
-  '/', // This will cache your main index.html
-  // Add other essential files if you have them locally (e.g., CSS, local JS)
-  // For CDN resources like Tailwind, they won't be cached by this basic setup
-  // unless you implement more complex caching strategies for opaque responses.
-  // However, the app shell (HTML) will be.
+  './', // Caches index.html at the root
+  './index.html',
+  './manifest.json',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png',
+  './icons/icon-180x180.png',
+  './icons/favicon.ico', // If you have one
+  // Any other local assets you want to cache
 ];
 
-// Install a service worker
+// Install event
 self.addEventListener('install', event => {
-  // Perform install steps
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('Opened cache and caching app shell');
         return cache.addAll(urlsToCache);
+      })
+      .catch(error => {
+        console.error('Failed to cache app shell during install:', error, urlsToCache);
       })
   );
 });
 
-// Cache and return requests
+// Fetch event
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response
         if (response) {
-          return response;
+          return response; // Serve from cache
         }
-        return fetch(event.request); // Or fetch from network
-      }
-    )
+        return fetch(event.request); // Fetch from network
+      })
   );
 });
 
-// Update a service worker
+// Activate event - clean up old caches
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -42,10 +45,12 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
+  return self.clients.claim();
 });
