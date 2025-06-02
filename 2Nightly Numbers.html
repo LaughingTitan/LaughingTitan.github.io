@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0ea5e9">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="icons/icon-180x180.png">
+
+    <title>Nightly Numbers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-btn {
+            transition: all 0.3s ease;
+        }
+        .custom-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem; /* text-sm */
+            color: #cbd5e1; /* slate-300 */
+        }
+        .input-group input {
+            background-color: #334155; /* slate-700 */
+            border: 1px solid #475569; /* slate-600 */
+            color: #f1f5f9; /* slate-100 */
+            font-size: 0.875rem; /* text-sm */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.75rem; /* p-3 */
+            width: 100%;
+        }
+        .input-group input:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            border-color: #0ea5e9; /* sky-500 */
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.5); /* ring-sky-500 */
+        }
+        .output-container {
+            min-height: 150px;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .copy-btn:hover {
+            opacity: 1;
+        }
+        .output-wrapper {
+            position: relative; /* For positioning the copy button */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 to-slate-800 text-white min-h-screen flex flex-col items-center justify-center p-4 selection:bg-sky-500 selection:text-white">
+
+    <div class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-2xl border border-slate-700">
+        <h1 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-sky-400">Nightly Numbers</h1>
+
+        <div class="mb-6 space-y-4">
+            <p class="text-sm text-slate-400 mb-4">Enter the values for each field below:</p>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="ft">First Touch</label>
+                    <input type="number" id="ft" placeholder="Ft value">
+                </div>
+                <div class="input-group">
+                    <label for="upg">Upgrades</label>
+                    <input type="number" id="upg" placeholder="Upg value">
+                </div>
+                <div class="input-group">
+                    <label for="prio">Prio (%)</label>
+                    <input type="number" id="prio" placeholder="Prio value">
+                </div>
+                <div class="input-group">
+                    <label for="perks">Perks</label>
+                    <input type="number" id="perks" placeholder="Perks value">
+                </div>
+                <div class="input-group">
+                    <label for="ratio">Ratio</label>
+                    <input type="text" id="ratio" placeholder="Ratio value">
+                </div>
+            </div>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="vhi1">VHI</label>
+                    <input type="number" id="vhi1" placeholder="VHI first value">
+                </div>
+                <div class="input-group">
+                    <label for="vhi2">Banner Amount</label>
+                    <input type="number" id="vhi2" placeholder="Banner Amount value">
+                </div>
+                 <div class="input-group">
+                    <label for="vmp">VMP (%)</label>
+                    <input type="number" id="vmp" placeholder="VMP value">
+                </div>
+                <div class="input-group">
+                    <label for="vhdp">VHDP</label>
+                    <input type="number" id="vhdp" placeholder="VHDP value">
+                </div>
+            </div>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="visa">Visa</label>
+                    <input type="number" id="visa" placeholder="Visa value">
+                </div>
+                <div class="input-group">
+                    <label for="calls">Calls</label>
+                    <input type="number" id="calls" placeholder="Calls value">
+                </div>
+                <div class="input-group">
+                    <label for="ml">Manual Leads</label>
+                    <input type="number" id="ml" placeholder="ML value">
+                </div>
+                <div class="input-group">
+                    <label for="sales">Sales ($)</label>
+                    <input type="number" id="sales" step="0.01" placeholder="Sales value">
+                </div>
+            </div>
+        </div>
+
+
+        <button id="generateBtn" class="custom-btn w-full bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-700 font-medium rounded-lg text-sm px-5 py-3 text-center mb-6">
+            Generate Text
+        </button>
+
+        <div class="mt-6 sm:mt-8">
+            <h2 class="text-xl font-semibold mb-3 text-sky-300">Generated Text:</h2>
+            <div class="output-wrapper">
+                <div id="outputText" class="output-container bg-slate-700 p-4 rounded-lg border border-slate-600 text-slate-200 whitespace-pre-wrap">
+                    Your output will appear here...
+                </div>
+                <button id="copyBtn" class="copy-btn hidden">Copy</button>
+            </div>
+        </div>
+
+        <div id="messageArea" class="mt-4 text-sm text-center"></div>
+    </div>
+
+    <script>
+        // Get references to the HTML elements (existing script content)
+        const ftInput = document.getElementById('ft');
+        const upgInput = document.getElementById('upg');
+        const prioInput = document.getElementById('prio');
+        const perksInput = document.getElementById('perks');
+        const ratioInput = document.getElementById('ratio');
+        const vhi1Input = document.getElementById('vhi1');
+        const vhi2Input = document.getElementById('vhi2');
+        const vmpInput = document.getElementById('vmp');
+        const vhdpInput = document.getElementById('vhdp');
+        const visaInput = document.getElementById('visa');
+        const callsInput = document.getElementById('calls');
+        const mlInput = document.getElementById('ml');
+        const salesInput = document.getElementById('sales');
+
+        const generateBtn = document.getElementById('generateBtn');
+        const outputText = document.getElementById('outputText');
+        const messageArea = document.getElementById('messageArea');
+        const copyBtn = document.getElementById('copyBtn');
+
+        generateBtn.addEventListener('click', () => {
+            messageArea.textContent = '';
+            messageArea.classList.remove('text-red-400', 'text-green-400');
+            outputText.textContent = 'Your output will appear here...';
+            copyBtn.classList.add('hidden');
+            copyBtn.textContent = 'Copy';
+
+            const ft = ftInput.value || '_';
+            const upg = upgInput.value || '_';
+            const prio = prioInput.value || '_';
+            const perks = perksInput.value || '_';
+            const ratio = ratioInput.value || '_';
+            const vhi1 = vhi1Input.value || '_';
+            const vhi2 = vhi2Input.value || '_'; 
+            const vmp = vmpInput.value || '_';
+            const vhdp = vhdpInput.value || '_';
+            const visa = visaInput.value || '_';
+            const calls = callsInput.value || '_';
+            const ml = mlInput.value || '_';
+            const sales = salesInput.value || '_';
+
+            const allInputs = [ftInput.value, upgInput.value, prioInput.value, perksInput.value, ratioInput.value, vhi1Input.value, vhi2Input.value, vmpInput.value, vhdpInput.value, visaInput.value, callsInput.value, mlInput.value, salesInput.value];
+            if (allInputs.every(val => !val.trim())) {
+                 messageArea.textContent = 'Please fill in at least one field.';
+                 messageArea.classList.add('text-red-400');
+                 outputText.textContent = 'Please enter some data to generate text.';
+                 return;
+            }
+
+            const generatedText = `Ft ${ft}
+Upg ${upg} Prio ${prio}%
+Perks ${perks} Ratio ${ratio}
+VHI ${vhi1}/${vhi2}
+VMP ${vmp}% VHDP ${vhdp}
+Visa ${visa}
+Calls ${calls} ML ${ml}
+Sales $${sales}`;
+
+            outputText.textContent = generatedText;
+            copyBtn.classList.remove('hidden'); 
+            
+            messageArea.textContent = 'Text generated successfully!';
+            messageArea.classList.add('text-green-400');
+        });
+
+        copyBtn.addEventListener('click', () => {
+            const textToCopy = outputText.textContent;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        copyBtn.textContent = 'Copied!';
+                        messageArea.textContent = 'Text copied to clipboard!';
+                        messageArea.classList.remove('text-red-400');
+                        messageArea.classList.add('text-green-400');
+                        setTimeout(() => {
+                           copyBtn.textContent = 'Copy';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text using Clipboard API: ', err);
+                        fallbackCopyTextToClipboard(textToCopy);
+                    });
+            } else {
+                fallbackCopyTextToClipboard(textToCopy);
+            }
+        });
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    copyBtn.textContent = 'Copied!';
+                    messageArea.textContent = 'Text copied to clipboard (fallback)!';
+                    messageArea.classList.remove('text-red-400');
+                    messageArea.classList.add('text-green-400');
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 2000);
+                } else {
+                    messageArea.textContent = 'Fallback copy failed.';
+                    messageArea.classList.remove('text-green-400');
+                    messageArea.classList.add('text-red-400');
+                }
+            } catch (err) {
+                messageArea.textContent = 'Fallback copy error.';
+                messageArea.classList.remove('text-green-400');
+                messageArea.classList.add('text-red-400');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // Add this script to register the service worker
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            // Changed path from '/sw.js' to './sw.js' for relative pathing
+            navigator.serviceWorker.register('./sw.js') 
+              .then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              })
+              .catch(error => {
+                console.log('ServiceWorker registration failed: ', error);
+              });
+          });
+        }
+    </script>
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Hello World</h1>
+<p>I'm hosted with GitHub Pages.</p>
+</body>
+</html>
