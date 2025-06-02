@@ -19,6 +19,12 @@
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-180x180.png",
+      "type": "image/png",
+      "sizes": "180x180",
+      "purpose": "apple-touch-icon"
     }
   ]
 }
